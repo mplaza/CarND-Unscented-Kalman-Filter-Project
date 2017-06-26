@@ -303,7 +303,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
   MatrixXd I = MatrixXd::Identity(x_size, x_size);
   P_ = (I - K * H_laser_) * P_;
 
-  NIS_laser_ = CalcNIS(z, S);
+  NIS_laser_ = CalcNIS(y, S);
 }
 
 /**
@@ -412,10 +412,10 @@ void UKF::UpdateRadar(MeasurementPackage meas_package) {
   P_ = P_ - K*S*K.transpose();//calculate cross correlation matrix
 
 
-  NIS_radar_ = CalcNIS(z, S);
+  NIS_radar_ = CalcNIS(z_diff, S);
 
 }
 
-double UKF::CalcNIS(const VectorXd &z, const MatrixXd &S) {
-  return z.transpose() * S.inverse() * z;
+double UKF::CalcNIS(const VectorXd &z_diff, const MatrixXd &S) {
+  return z_diff.transpose() * S.inverse() * z_diff;
 }
